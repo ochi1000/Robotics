@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f9f9f9;
+      font-family: sans-serif;
+    }
+
+    .controller {
+      display: grid;
+      grid-template-columns: 100px 100px 100px;
+      grid-template-rows: 100px 100px 100px;
+      gap: 10px;
+    }
+
+    button {
+      width: 100px;
+      height: 100px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .forward   { grid-column: 2; grid-row: 1; }
+    .left      { grid-column: 1; grid-row: 2; }
+    .stop      { grid-column: 2; grid-row: 2; background: red;}
+    .stop:hover{ background: rgb(216, 0, 0); }    
+    .right     { grid-column: 3; grid-row: 2; }
+    .backward  { grid-column: 2; grid-row: 3; }
+  </style>
+</head>
+<body>
+  <div class="controller">
+    <button class="forward"   onclick="sendCommand('forward')">Forward</button>
+    <button class="left"      onclick="sendCommand('left')">Left</button>
+    <button class="stop"      onclick="sendCommand('stop')">Stop</button>
+    <button class="right"     onclick="sendCommand('right')">Right</button>
+    <button class="backward"  onclick="sendCommand('backward')">Backward</button>
+  </div>
+
+  <div onclick="window.location.href='index.html'" style="
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    /* background-color: #6c757d; */
+    border: #6c757d 1px solid;
+    color: black;
+    cursor: pointer;
+    z-index: 1000;
+    ">
+      ⬅ Back
+  </div>
+
+  <script>
+    const serverUrl = "http://whole-oryx-ace.ngrok-free.app/drive";
+
+    function sendCommand(cmd) {
+      fetch(serverUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ command: cmd })
+      });
+    }
+
+    // Handle arrow key input
+    document.addEventListener("keydown", function (e) {
+      switch (e.key) {
+        case "ArrowUp":
+          sendCommand("forward");
+          break;
+        case "ArrowDown":
+          sendCommand("backward");
+          break;
+        case "ArrowLeft":
+          sendCommand("left");
+          break;
+        case "ArrowRight":
+          sendCommand("right");
+          break;
+        case " ":
+          sendCommand("stop");
+          break;
+      }
+    });
+  </script>
+</body>
+</html>
